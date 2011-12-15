@@ -1,0 +1,15 @@
+{
+  "name"    : "@import.js",
+  "description" : "Imports JavaScript files into a single file",
+  "author"  : {
+    "name"  : "Michael Diolosa",
+    "email" : "michael.diolosa@gmail.com",
+    "url"   : "http://twitter.com/mbrio"
+  },
+  "version" : "1.0.0",
+  "main"    : "./at-import.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mbrio/at-import.git"
+  }
+}
