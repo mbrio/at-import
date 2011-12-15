@@ -30,19 +30,23 @@ module.exports = function(input, output, replacements) {
 
         stat = fs.statSync(input);
 
-        if (shallow !== true && stat.isDirectory()) {
+        if (stat.isDirectory()) {
           var files = fs.readdirSync(input),
-              i, j, file;
+              childStat, i, j, file;
               
           for (i = 0, j = files.length; i < j; i++) {
             file = path.join(input, files[i]);
-            writeFile(file, space);
+            childStat = fs.statSync(file);
+            
+            if (shallow !== true || !childStat.isDirectory()) {
+              writeFile(file, space);
+            }
           }
         } else if(stat.isFile() && /\.js$/.test(input)) {
           var data = fs.readFileSync(input);
 
           data.toString().split('\n').forEach(function(line) {            
-            var lineRegexp = /^(\s*)\/\/\s*@\s*(shallow_)?import\s*\(\s*((?:["][^"]+["]\s*,?\s*)+)\s*\)\s*$/g,
+            var lineRegexp = /^(\s*)(?:\/\/|\/\*)\s*\@\s*(shallow_)?import\s*\(\s*((?:["][^"]+["]\s*,?\s*)+)\s*\)\s*(?:\*\/)?$/g,
                 valueRegexp = /["]([^"]+)["]/g,
                 lineResult = lineRegexp.exec(line),
                 child, valueResult;
@@ -50,7 +54,7 @@ module.exports = function(input, output, replacements) {
             if(lineResult) {
               while (valueResult = valueRegexp.exec(lineResult[3])) {
                 child = path.join(path.dirname(input), valueResult[1]);
-                writeFile(child, lineResult[1], (lineResult[2] === 'shallow_'));
+                writeFile(child, space + lineResult[1], (lineResult[2] === 'shallow_'));
               }
             } else {
               contents.push(space + line);

@@ -1,6 +1,6 @@
 {
   "name"    : "@import.js",
-  "description" : "Imports JavaScript files into a single file",
+  "description" : "A node.js module that combines JavaScript files through the use of an @import directive",
   "author"  : {
     "name"  : "Michael Diolosa",
     "email" : "michael.diolosa@gmail.com",
