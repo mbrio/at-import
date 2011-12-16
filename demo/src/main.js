@@ -16,4 +16,4 @@
   console.log("Passed: " + (view1 === 1));
   console.log("Passed: " + (view1 === 1));
   
-}())
+}());

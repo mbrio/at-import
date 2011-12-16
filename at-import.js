@@ -3,7 +3,7 @@ var fs = require('fs'),
     Lazy = require('lazy');
 
 var Importer = function(input, output, replacements) {
-  this._replacements = replacements || {}
+  this._replacements = replacements || {};
   this._input = input;
   this._output = output;
   this._contents = [];
@@ -77,7 +77,7 @@ Importer.prototype._processFile = function(input, space, shallow) {
       } else {
         context._contents.push(space + line);
       }
-    }
+    };
   }(this));
   
   //lazy = new Lazy(fs.createReadStream(input));
@@ -87,20 +87,36 @@ Importer.prototype._processFile = function(input, space, shallow) {
   this._imported[input] = true;
 };
 
-Importer.prototype.process = function() {
-  var fd = fs.openSync(this._output, 'w');
-
+Importer.prototype.process = function(callback) {
+  var data, output;
+  
   this._processFiles(this._input);
-  fs.writeSync(fd, this._processReplacements(this._contents.join('\n')));
-  fs.closeSync(fd);
+  data = this._processReplacements(this._contents.join('\n'));
+  
+  output = fs.createWriteStream(this._output, { flags: 'w' });
+  output.addListener('error', function(err) {
+    throw err;
+  });
+  
+  output.write(data);
+  
+  output.addListener('drain', function() {
+    output.end();
+    if (callback) callback();
+  });
   
   return this;
 };
 
-Importer.process = function(input, output, replacements) {
-  return new Importer(input, output, replacements).process();
+Importer.process = function(input, output, replacements, callback) {
+  if (typeof(replacements) === 'function') {
+    callback = replacements;
+    replacements = null;
+  }
+  
+  return new Importer(input, output, replacements).process(callback);
 };
 
-module.exports = function(input, output, replacements) {
-  return Importer.process(input, output, replacements)
+module.exports = function(input, output, replacements, callback) {
+  return Importer.process(input, output, replacements, callback);
 };
