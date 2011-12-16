@@ -70,14 +70,23 @@ The following will import the files in this order:
 
 Library Usage
 ---
-    var atImport = require('at-import'),
-        input = 'main.js',
-        output = 'script.js',
-        replacementMap = {
-          '@@VERSION@@', '1.0.0'
-        };
+    var atImport = require('at-import');
     
-    atImport(input, output, replacementMap)
+    atImport({
+      input: 'main.js',
+      output: 'script.js',
+      replacements = {
+        '@@VERSION@@': '1.0.0'
+      }
+    });
+
+Arguments
+---
+    * `options`
+        * `input` = The input JavaScript file
+        * `output` = The output JavaScript file
+        * `replacements` = An object containing a map of text replacements
+    * `callback`
     
 Demo
 ---

@@ -2,18 +2,19 @@ var fs = require('fs'),
     path = require('path'),
     Lazy = require('lazy');
 
-var Importer = function(input, output, replacements) {
-  this._replacements = replacements || {};
-  this._input = input;
-  this._output = output;
+var Importer = function(options) {
+  this._replacements = options.replacements || {};
+  this._input = options.input;
+  this._output = options.output;
   this._contents = [];
   this._imported = {};
+  this._stream = null;
   
-  if (typeof(input) !== 'string') {
+  if (typeof(this._input) !== 'string') {
     throw 'You must specify an input file.';
   }
   
-  if (typeof(output) !== 'string') {
+  if (typeof(this._output) !== 'string') {
     throw 'You must specify an output file.';
   }
 };
@@ -36,6 +37,7 @@ Importer.prototype._processFiles = function(input, space, shallow) {
   shallow = shallow || false;
   space = space || '';
   
+  // ASYNC
   stat = fs.statSync(input);
   
   if (stat.isDirectory()) { this._processDirectory(input, space, shallow); }
@@ -43,11 +45,13 @@ Importer.prototype._processFiles = function(input, space, shallow) {
 };
 
 Importer.prototype._processDirectory = function(input, space, shallow) {
+  // ASYNC
   var files = fs.readdirSync(input),
       stat, i, j, file;
   
   for (i = 0, j = files.length; i < j; i++) {
     file = path.resolve(path.join(input, files[i]));
+    // ASYNC
     stat = fs.statSync(file);
 
     if (shallow !== true || !stat.isDirectory()) {
@@ -80,6 +84,7 @@ Importer.prototype._processFile = function(input, space, shallow) {
     };
   }(this));
   
+  // ASYNC
   //lazy = new Lazy(fs.createReadStream(input));
   //lazy.lines.forEach(lineProcessor);
   fs.readFileSync(input).toString().split('\n').forEach(lineProcessor);
@@ -88,35 +93,30 @@ Importer.prototype._processFile = function(input, space, shallow) {
 };
 
 Importer.prototype.process = function(callback) {
-  var data, output;
+  var self = this, data;
   
-  this._processFiles(this._input);
-  data = this._processReplacements(this._contents.join('\n'));
+  self._processFiles(self._input);
+  data = self._processReplacements(self._contents.join('\n'));
   
-  output = fs.createWriteStream(this._output, { flags: 'w' });
-  output.addListener('error', function(err) {
+  self._stream = fs.createWriteStream(self._output, { flags: 'w' });
+  self._stream.addListener('error', function(err) {
     throw err;
   });
   
-  output.write(data);
+  self._stream.write(data);
   
-  output.addListener('drain', function() {
-    output.end();
+  self._stream.addListener('drain', function() {
+    self._stream.end();
     if (callback) callback();
   });
   
-  return this;
+  return self;
 };
 
-Importer.process = function(input, output, replacements, callback) {
-  if (typeof(replacements) === 'function') {
-    callback = replacements;
-    replacements = null;
-  }
-  
-  return new Importer(input, output, replacements).process(callback);
+Importer.process = function(options, callback) {
+  return new Importer(options).process(callback);
 };
 
-module.exports = function(input, output, replacements, callback) {
-  return Importer.process(input, output, replacements, callback);
+module.exports = function() {
+  return Importer.process.apply(Importer, arguments)
 };
