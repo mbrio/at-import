@@ -1,5 +1,5 @@
 {
-  "name"    : "@import.js",
+  "name"    : "at-import",
   "description" : "A node.js module that combines JavaScript files through the use of an @import directive",
   "author"  : {
     "name"  : "Michael Diolosa",
