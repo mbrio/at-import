@@ -1,6 +1,5 @@
 var fs = require('fs'),
-    path = require('path'),
-    Lazy = require('lazy');
+    path = require('path');
 
 var Importer = function(options) {
   this._replacements = options.replacements || {};
@@ -37,7 +36,6 @@ Importer.prototype._processFiles = function(input, space, shallow) {
   shallow = shallow || false;
   space = space || '';
   
-  // ASYNC
   stat = fs.statSync(input);
   
   if (stat.isDirectory()) { this._processDirectory(input, space, shallow); }
@@ -45,13 +43,11 @@ Importer.prototype._processFiles = function(input, space, shallow) {
 };
 
 Importer.prototype._processDirectory = function(input, space, shallow) {
-  // ASYNC
   var files = fs.readdirSync(input),
       stat, i, j, file;
   
   for (i = 0, j = files.length; i < j; i++) {
     file = path.resolve(path.join(input, files[i]));
-    // ASYNC
     stat = fs.statSync(file);
 
     if (shallow !== true || !stat.isDirectory()) {
@@ -84,9 +80,6 @@ Importer.prototype._processFile = function(input, space, shallow) {
     };
   }(this));
   
-  // ASYNC
-  //lazy = new Lazy(fs.createReadStream(input));
-  //lazy.lines.forEach(lineProcessor);
   fs.readFileSync(input).toString().split('\n').forEach(lineProcessor);
 
   this._imported[input] = true;

@@ -6,13 +6,10 @@
     "email" : "michael.diolosa@gmail.com",
     "url"   : "http://twitter.com/mbrio"
   },
-  "version" : "1.0.0",
+  "version" : "1.0.2",
   "main"    : "./at-import.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:mbrio/at-import.git"
-  },
-  "dependencies": {
-    "lazy": "1.0.7"
   }
 }
