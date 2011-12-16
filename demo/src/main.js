@@ -1,19 +1,19 @@
 (function(){
   
   var version = '@@VERSION@@',
-      alerts = false,
-      alert_helper = false,
-      not_there = false,
-      view1 = false,
-      view2 = false;
-  
-  // @shallow_import("lib")
-  /* @import("views") */
+      alerts = 0,
+      alert_helper = 0,
+      not_there = 0,
+      view1 = 0,
+      view2 = 0;
 
-  console.log("Passed: " + (alerts === true));
-  console.log("Passed: " + (alert_helper === true));
-  console.log("Passed: " + (not_there === false));
-  console.log("Passed: " + (view1 === true));
-  console.log("Passed: " + (view1 === true));
+  // @shallow_import("lib/alert.js", "lib")
+  // @import("views")
+
+  console.log("Passed: " + (alerts === 1));
+  console.log("Passed: " + (alert_helper === 1));
+  console.log("Passed: " + (not_there === 0));
+  console.log("Passed: " + (view1 === 1));
+  console.log("Passed: " + (view1 === 1));
   
 }())

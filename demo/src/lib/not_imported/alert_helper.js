@@ -1,1 +1,1 @@
-alert_helper = true;
+alert_helper++;

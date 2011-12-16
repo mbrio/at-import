@@ -1,1 +1,1 @@
-view2 = true;
+view2++;

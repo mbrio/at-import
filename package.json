@@ -11,5 +11,8 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:mbrio/at-import.git"
+  },
+  "dependencies": {
+    "lazy": "1.0.7"
   }
 }
