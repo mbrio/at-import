@@ -95,6 +95,13 @@ The application within /demo contains a small display of how you could use
 
     cd demo
     node build.js
+    
+Install
+---
+You can download the source code at [GitHub](http://github.com/mbrio/at-import)
+or you can install the library using npm:
+
+    npm install at-import
 
 License
 ---
