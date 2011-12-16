@@ -107,6 +107,7 @@ Importer.prototype.process = function(callback) {
   
   self._stream.addListener('drain', function() {
     self._stream.end();
+    self._stream = null;
     if (callback) callback();
   });
   
