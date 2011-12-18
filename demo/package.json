@@ -1,17 +1,19 @@
 {
-  "name"    : "at-import",
-  "description" : "A node.js module that combines JavaScript files through the use of an @import directive",
+  "name"    : "at-import demo",
+  "description" : "@import.js demo app",
   "author"  : {
     "name"  : "Michael Diolosa",
     "email" : "michael.diolosa@gmail.com",
     "url"   : "http://twitter.com/mbrio"
   },
-  "version" : "1.0.4",
-  "main"    : "./at-import.js",
+  "version" : "1.0.0",
+  "main"    : "./build.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:mbrio/at-import.git"
   }, "dependencies": {
-      "lazy": "1.0.7"
+      "lazy": "1.0.7",
+      "vows": ">=0.6.0",
+      "should": ">=0.4.2"
   }
 }

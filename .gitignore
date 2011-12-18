@@ -1,3 +1,4 @@
 .DS_Store
 Thumbs.db
 demo/script.js
+node_modules
