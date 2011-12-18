@@ -60,7 +60,7 @@ SOFTWARE.
     this._imported = {};
     this._stream = null;
     this._document = new Document();
-    this._fileCount = 0;
+    this._dependancies = 0;
     this._callback = callback;
   
     if (typeof(this._input) !== 'string') {
@@ -84,13 +84,13 @@ SOFTWARE.
   };
   
   Importer.prototype._addDependant = function() {
-    this._fileCount++;
+    this._dependancies++;
   };
   
   Importer.prototype._removeDependant = function() {
-    this._fileCount--;
+    this._dependancies--;
 
-    if (this._fileCount === 0) {
+    if (this._dependancies === 0) {
       this._write();
     }
   };
