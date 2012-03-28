@@ -106,18 +106,25 @@ SOFTWARE.
     shallow = shallow || false;
     space = space || '';
   
-    fs.stat(input, (function(self, doc, currentDoc, input, space, shallow) {
+    var statCallback = (function(self, doc, currentDoc, input, space, shallow) {
       return function(err, stat) {
         if (err) { throw err; }
         if (stat.isDirectory()) { self._processDirectory(currentDoc, input, space, shallow); }
         else if (stat.isFile()) { self._processFile(doc, currentDoc, input, space, shallow); }
         else { self._removeDependant(); }
       };
-    }(this, doc, currentDoc, input, space, shallow)));
+    }(this, doc, currentDoc, input, space, shallow));
+
+    /* Async */
+    //fs.stat(input, statCallback);
+
+    /* Sync */
+    var stat = fs.statSync(input);
+    statCallback(null, stat);
   };
 
   Importer.prototype._processDirectory = function(doc, input, space, shallow) {  
-    fs.readdir(input, (function(self, doc, input, space, shallow) {
+    var readdirCallback = (function(self, doc, input, space, shallow) {
       return function(err, files) {
         var i, j, file;
         if (err) { throw err; }
@@ -141,7 +148,14 @@ SOFTWARE.
           }
         }
       };
-    }(this, doc, input, space, shallow)));
+    }(this, doc, input, space, shallow))
+
+    /* Async */
+    //fs.readdir(input, readdirCallback);
+
+    /* Sync */
+    var files = fs.readdirSync(input);
+    readdirCallback(null, files);
   };
 
   Importer.prototype._processFile = function(doc, currentDoc, input, space, shallow) {
@@ -177,14 +191,20 @@ SOFTWARE.
       encoding: 'utf8'
     });
   
-    lazy = new Lazy(stream);
-    lazy.on('end', (function(self, input){
+    var endCallback = (function(self, input){
       return function() {
         self._removeDependant();
       };
-    }(this, input)));
-    
-    lazy.lines.map(String).forEach(lineProcessor);
+    }(this, input));
+
+    /* Async */
+    /*lazy = new Lazy(stream);
+    lazy.on('end', endCallback);
+    lazy.lines.map(String).forEach(lineProcessor);*/
+
+    /* Sync */
+    fs.readFileSync(input).toString().split('\n').forEach(lineProcessor);
+    endCallback();
   };
   
   Importer.prototype._write = function() {
