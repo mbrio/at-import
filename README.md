@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/mbrio/at-import.png)](http://travis-ci.org/mbrio/at-import)
 @import.js
 ===
 A node.js module that combines JavaScript files through the use of an @import
